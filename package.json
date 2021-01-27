@@ -1,6 +1,14 @@
 {
-  "name": "workflow2",
-  "version": "0.0.0",
+  "name": "ngx-admin",
+  "version": "6.0.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akveo/ngx-admin.git"
+  },
+  "bugs": {
+    "url": "https://github.com/akveo/ngx-admin/issues"
+  },
   "scripts": {
     "ng": "ng",
     "conventional-changelog": "conventional-changelog",

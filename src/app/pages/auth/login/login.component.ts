@@ -1,60 +1,55 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
-import { LoginService } from '../../../services/auth';
+/**
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { getDeepFromObject, NbAuthResult, NbAuthService, NbAuthSocialLink, NbLoginComponent, NB_AUTH_OPTIONS } from '@nebular/auth';
 
 
-@Component({ templateUrl: 'login.component.html',
-styleUrls: ['./login.component.css'] })
-export class LoginComponent implements OnInit {
-    loginForm: FormGroup;
-    loading = false;
-    submitted = false;
-    returnUrl: string;
+@Component({
+  selector: 'nb-login',
+  templateUrl: './login.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class LoginComponent extends NbLoginComponent {
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private route: ActivatedRoute,
-        private router: Router,
-        private _loginService: LoginService,
-    ) {
-        // redirect to home if already logged in
-        if (localStorage.getItem("token")) {
-            this.router.navigate(['/']);
-        }
-    }
+  redirectDelay: number = 0;
+  showMessages: any = {};
+  strategy: string = '';
 
-    ngOnInit() {
-        this.loginForm = this.formBuilder.group({
-            username: ['', Validators.required],
-            password: ['', Validators.required]
-        });
+  errors: string[] = [];
+  messages: string[] = [];
+  user: any = {};
+  submitted: boolean = false;
+  socialLinks: NbAuthSocialLink[] = [];
+  rememberMe = false;
+  login(): void {
+    this.errors = [];
+    this.messages = [];
+    this.submitted = true;
+    this.strategy = 'email';
+    this.service.authenticate(this.strategy, this.user).subscribe((result: NbAuthResult) => {
+      this.submitted = false;
+console.log(result);
+      if (result.isSuccess()) {
+        this.messages = result.getMessages();
+      } else {
+        this.errors = result.getErrors();
+      }
 
-        // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-    }
+      const redirect = result.getRedirect();
+      if (redirect) {
+        setTimeout(() => {
+          return this.router.navigateByUrl(redirect);
+        }, this.redirectDelay);
+      }
+      this.cd.detectChanges();
+    });
+  }
 
-    // convenience getter for easy access to form fields
-    get f() { return this.loginForm.controls; }
-
-    login() {
-        this.submitted = true;
-
-        // stop here if form is invalid
-        if (this.loginForm.invalid) {
-            return;
-        }
-
-        this.loading = true;
-        this._loginService.login(this.f.username.value, this.f.password.value)
-            .pipe(first())
-            .subscribe(
-                data => {
-                    this.router.navigate([this.returnUrl]);
-                },
-                error => {
-                    this.loading = false;
-                });
-    }
+  getConfigValue(key: string): any {
+    return getDeepFromObject(this.options, key, null);
+  }
 }

@@ -1,22 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService, NbMenuItem } from '@nebular/theme';
+import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
+
 import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
-import { map, takeUntil, filter } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { Router } from '@angular/router';
+import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
 
 @Component({
   selector: 'ngx-header',
   styleUrls: ['./header.component.scss'],
-  templateUrl: './header.component.html'
+  templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
-
   themes = [
     {
       value: 'default',
@@ -46,10 +46,18 @@ export class HeaderComponent implements OnInit, OnDestroy {
               private userService: UserData,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
-              private _router: Router) {
+              private authService: NbAuthService) {
   }
 
   ngOnInit() {
+    this.authService.onTokenChange()
+      .subscribe((token: NbAuthJWTToken) => {
+
+        if (token.isValid()) {
+          this.user = token.getPayload(); // here we receive a payload from the token and assigns it to our `user` variable 
+        }
+
+      });
     this.currentTheme = this.themeService.currentTheme;
 
     this.userService.getUsers()
@@ -70,17 +78,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
-      this.menuService.onItemClick().subscribe(( event ) => {
-           switch (event.item.title)
-           {
-             case 'Profile':
-
-               break;
-              case 'Log out':
-                this.logout()
-                break;
-           }
-	  });
   }
 
   ngOnDestroy() {
@@ -103,10 +100,4 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.menuService.navigateHome();
     return false;
   }
-  logout(){
-    if(localStorage.getItem('token'))
-    localStorage.clear();
-    this._router.navigate(['/login']);
-    }
-  
 }

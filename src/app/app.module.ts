@@ -1,15 +1,16 @@
-import { NgModule } from '@angular/core';
+/**
+ * @license
+ * Copyright Akveo. All Rights Reserved.
+ * Licensed under the MIT License. See License.txt in the project root for license information.
+ */
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LoginComponent } from './pages/auth/login/login.component';
-import { AppRoutingModule } from './app-routing.module';
-import { JwtInterceptor } from './helpers';
-import { AppComponent } from './app.component';
-import { DashboardModule } from './pages/dashboard/dashboard.module';
+import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { CoreModule } from './@core/core.module';
 import { ThemeModule } from './@theme/theme.module';
+import { AppComponent } from './app.component';
+import { AppRoutingModule } from './app-routing.module';
 import {
   NbChatModule,
   NbDatepickerModule,
@@ -17,37 +18,29 @@ import {
   NbMenuModule,
   NbSidebarModule,
   NbToastrModule,
-  NbWindowModule
+  NbWindowModule,
 } from '@nebular/theme';
 
 @NgModule({
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        DashboardModule,
-        NbSidebarModule.forRoot(),
-        NbMenuModule.forRoot(),
-        NbDatepickerModule.forRoot(),
-        NbDialogModule.forRoot(),
-        NbWindowModule.forRoot(),
-        NbToastrModule.forRoot(),
-        NbChatModule.forRoot({
-        messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
+  declarations: [AppComponent],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    NbSidebarModule.forRoot(),
+    NbMenuModule.forRoot(),
+    NbDatepickerModule.forRoot(),
+    NbDialogModule.forRoot(),
+    NbWindowModule.forRoot(),
+    NbToastrModule.forRoot(),
+    NbChatModule.forRoot({
+      messageGoogleMapKey: 'AIzaSyA_wNuCzia92MAmdLRzmqitRGvCF7wCZPY',
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    ],
-    declarations: [
-        AppComponent,
-        LoginComponent
-    ],
-    providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-
-    ],
-    bootstrap: [AppComponent]
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { };
+export class AppModule {
+}
