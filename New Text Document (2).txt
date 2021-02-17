@@ -1,0 +1,19 @@
+    ExportReport(exportType) {
+        
+        this.exportReportDataRequestobj.exportType = exportType;
+
+        let exportHtmlWithCri = "";
+        exportHtmlWithCri += '<center><div style="font-size:16px !important"><strong>Procedure Level Payment Details</strong></div></center>';
+
+        let htmltoExport = exportHtmlWithCri + "<br/>" + $("div[id$='procPaymentDetailsPrint']").html() + "</div>";
+
+        this.exportReportDataRequestobj.fileName = "Procedure_Level_Payment_Details";
+        this.exportReportDataRequestobj.exportStringHtml = htmltoExport;
+        this._myweb.ExportToExcel(this.exportReportDataRequestobj).subscribe(
+        data => {
+            this.fileDownload.downloadFile(data);
+        },
+        error => {
+            this.error = error;
+        });
+    }
