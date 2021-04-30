@@ -1,1 +1,24 @@
-<p>reset-link works!</p>
+
+ <!-- Overlay inner wrapper -->
+ <div *ngIf=!error class="overlay__inner">
+    <!-- Title -->
+    <h1 class="overlay__title">
+        Redirecting  <span style="height: 81px;"><img src="\assets\images\loader.gif"/> </span>
+    </h1>
+    <p class="overlay__description">
+        
+      </p>
+  </div>
+  <!-- Overlay inner wrapper -->
+  <div *ngIf=error class="overlay__inner">
+    <!-- Title -->
+    <h1 class="overlay__title">
+        Oh no, the link has already expired. click <a class="text-link" routerLink="../reset-password">forgot password</a> to request for a new one.
+    </h1>
+    <!-- Buttons -->
+    <div class="overlay__btns">
+        <section class="sign-in-or-up" aria-label="Sign in or sign up">
+            <p><a class="text-link" routerLink="../login">Back to Log In</a></p>
+          </section>
+    </div>
+  </div>

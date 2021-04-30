@@ -1,6 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { NbResetPasswordComponent } from '@nebular/auth';
-
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { NbAuthService, NbResetPasswordComponent } from '@nebular/auth';
 @Component({
   selector: 'ngx-reset-password',
   templateUrl: './reset-password.component.html',
@@ -8,7 +7,9 @@ import { NbResetPasswordComponent } from '@nebular/auth';
 })
 export class ResetPasswordComponent extends NbResetPasswordComponent {
 
+
   ngOnInit(): void {
+
   }
 
 }

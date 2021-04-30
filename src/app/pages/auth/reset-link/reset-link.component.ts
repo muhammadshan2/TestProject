@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { routes } from '@nebular/auth';
 import { environment } from 'environments/environment';
 import { first } from 'rxjs/operators';
 
@@ -8,17 +9,22 @@ import { first } from 'rxjs/operators';
 @Component({
   selector: 'ngx-reset-link',
   templateUrl: './reset-link.component.html',
-  styleUrls: ['./reset-link.component.scss']
+  styleUrls: ['./reset-link.component.scss','./reset-link.component.css']
 })
 export class ResetLinkComponent implements OnInit {
 result :any;
-  constructor(private _activatedRouter: ActivatedRoute,private http: HttpClient) 
+error:boolean;
+  constructor(private _activatedRouter: ActivatedRoute,private _router: Router,private http: HttpClient) 
   {
     this.result ='';
+    this.error = false;
    }
   ngOnInit(): void {
     const param = this._activatedRouter.snapshot.queryParams
-    this.VerifyLink(param.query)
+    debugger;
+    const query = param.query
+    console.log(query.trim());
+    this.VerifyLink(query.trim())
   }
 
   VerifyLink(param) {
@@ -28,8 +34,10 @@ result :any;
         this.result = success;
         if(this.result.status)
         {
-          console.log(this.result)
+          console.log(this.result);
+          this._router.navigate(['./reset-password'])
         }else{
+          this.error = true;
           console.log(this.result.status)
         }
       },

@@ -13,6 +13,7 @@ import { LogoutComponent } from './logout/logout.component';
 import { RequestPasswordComponent } from './request-password/request-password.component';
 import { ResetPasswordComponent } from './reset-password/reset-password.component'; // <---
 import { environment } from 'environments/environment';
+import { ResetLinkComponent } from './reset-link/reset-link.component';
 export interface NbAuthSocialLink {
   link?: string,
   url?: string,
@@ -67,14 +68,18 @@ const formSetting: any = {
             method: 'post',
           },
           requestPass: {
-            endpoint: '/auth/request-pass',
+            endpoint: '/api/User/ForgotPassword',
             method: 'post',
+            redirect: {
+              success: null,
+              failure: null, // stay on the same page
+            },
           },
           resetPass: {
-            endpoint: '/auth/reset-pass',
+            endpoint: '/api/User/ResetPassword',
             method: 'post',
+            
           },
-          
         }),
       ],
       forms: {
@@ -93,7 +98,8 @@ const formSetting: any = {
     RegisterComponent,
     LogoutComponent,
     RequestPasswordComponent,
-    ResetPasswordComponent, // <---
+    ResetPasswordComponent,
+    ResetLinkComponent, // <---
   ],
 })
 export class NgxAuthModule {

@@ -6,6 +6,8 @@ import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { NbAuthJWTToken, NbAuthService } from '@nebular/auth';
+import { Router } from '@angular/router';
+import { threadId } from 'worker_threads';
 
 @Component({
   selector: 'ngx-header',
@@ -38,15 +40,16 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [{ title: 'Profile' }, { title: 'Log out', }];
 
   constructor(private sidebarService: NbSidebarService,
-              private menuService: NbMenuService,
-              private themeService: NbThemeService,
-              private userService: UserData,
-              private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService,
-              private authService: NbAuthService) {
+    private menuService: NbMenuService,
+    private themeService: NbThemeService,
+    private userService: UserData,
+    private router: Router,
+    private layoutService: LayoutService,
+    private breakpointService: NbMediaBreakpointsService,
+    private authService: NbAuthService) {
   }
 
   ngOnInit() {
@@ -78,6 +81,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
       )
       .subscribe(themeName => this.currentTheme = themeName);
+
+    this.menuService.onItemClick().subscribe((event) => {
+      this.onContecxtItemSelection(event.item.title);
+    });
   }
 
   ngOnDestroy() {
@@ -99,5 +106,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
   navigateHome() {
     this.menuService.navigateHome();
     return false;
+  }
+  onContecxtItemSelection(title) {
+    if (title === 'Log out') {
+      this.router.navigate(['/auth/logout']);
+    }
   }
 }

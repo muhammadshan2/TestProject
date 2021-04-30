@@ -32,10 +32,11 @@ export class LoginComponent extends NbLoginComponent {
     this.strategy = 'email';
     this.service.authenticate(this.strategy, this.user).subscribe((result: NbAuthResult) => {
       this.submitted = false;
-console.log(result);
       if (result.isSuccess()) {
+        this.showMessages.success = true;
         this.messages = result.getMessages();
       } else {
+        this.showMessages.error = true;
         this.errors = result.getErrors();
       }
 
